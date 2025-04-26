@@ -57,18 +57,21 @@ Main language constructs to introduce:
 
 Quiz students - show code snippets and then ask them what it will synthesize into.
 
-  a. ```
+  a.
+  ``` Verilog
   logic [7:0] a;
   ```
 
-  a. ```
+  a.
+  ``` Verilog
   logic [7:0] a;
   always_ff @(posedge clk) begin
       a <= a + 1;
   end
   ```
 
-  a. ```
+  a.
+  ``` Verilog
   logic [7:0] a;
   always_ff @(posedge clk) begin
     if (reset) begin
