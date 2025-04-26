@@ -38,10 +38,15 @@ Start by describing basic digital logic:
 Develop intuition by drawing a few circuits and asking students what happens when certain signals change
 
   a. A single flip-flop with differing values at the input
+
   a. Two cascaded flip-flops with changing values at the input
+
   a. An edge detector that pulses high on a posedge
+
   a. A single flip-flop with an incrementing feedback path
+
   a. A single flip-flop with an incrementing feedback path and a reset
+
   a. A programmable PWM generator
 
 Might be good to do live demonstrations of this with Logisim
@@ -62,7 +67,7 @@ Quiz students - show code snippets and then ask them what it will synthesize int
   logic [7:0] a;
   ```
 
-  a.
+  b.
   ``` Verilog
   logic [7:0] a;
   always_ff @(posedge clk) begin
@@ -70,30 +75,113 @@ Quiz students - show code snippets and then ask them what it will synthesize int
   end
   ```
 
-  a.
+  c.
   ``` Verilog
   logic [7:0] a;
   always_ff @(posedge clk) begin
-    if (reset) begin
-        a <= 0;
-    end else begin
-        a <= a + 1;
+      if (reset) begin
+          a <= 0;
+      end else begin
+          a <= a + 1;
+      end
   end
   ```
 
-  a. ```
+  d.
+  ``` Verilog
   logic [7:0] a;
   always_ff @(posedge clk) begin
-    if (reset) a <= 0;
-    else a <= a + 1;
+      a <= a + 1;
+      if (reset) begin
+          a <= 0;
+      end
   end
   ```
-logic [7:0] a;
 
-always_ff @(posedge clk) begin
-    a <= a + 1;
-    if (reset) begin
-        a <= 0;
-    end
-end
-```
+  e.
+  ``` Verilog
+  logic a;
+  logic b;
+  logic c;
+  always_ff @(posedge clk) begin
+      a <= signal;
+      b <= a;
+
+      c <= a & !b;
+  end
+  ```
+
+  f.
+  ``` Verilog
+  logic winner;
+  logic [1:0] state;
+  always_ff @(posedge clk) begin
+      if (state == 0) begin
+          if (signal_a) begin
+              state <= 1;
+          end
+      end else if (state == 1) begin
+          if (signal_a) begin
+              state <= 0;
+          end else if (signal_b) begin
+              state <= 2;
+          end
+      end else if (state == 2) begin
+          if (signal_a) begin
+              state <= 0;
+          end else if (signal_b) begin
+              state <= 3;
+          end
+      end else if (state == 3) begin
+          if (signal_b) begin
+              state <= 0;
+              winner <= 1;
+          end else if (signal_a) begin
+              state <= 0;
+          end
+      end
+  end
+  ```
+
+  f.
+  ``` Verilog
+  logic a, a_q, b, b_q;
+  logic a_rose, b_rose;
+  always_ff @(posedge clk) begin
+      a <= a_in;
+      a_q <= a;
+      a_rose <= a & !a_q;
+
+      b <= b_in;
+      b_q <= b;
+      b_rose <= b & !b_q;
+  end
+
+  logic winner;
+  logic [1:0] state;
+  always_ff @(posedge clk) begin
+      if (state == 0) begin
+          if (a_rose) begin
+              state <= 1;
+          end
+      end else if (state == 1) begin
+          if (a_rose) begin
+              state <= 0;
+          end else if (b_rose) begin
+              state <= 2;
+          end
+      end else if (state == 2) begin
+          if (a_rose) begin
+              state <= 0;
+          end else if (b_rose) begin
+              state <= 3;
+          end
+      end else if (state == 3) begin
+          if (b_rose) begin
+              state <= 0;
+              winner <= 1;
+          end else if (a_rose) begin
+              state <= 0;
+          end
+      end
+  end
